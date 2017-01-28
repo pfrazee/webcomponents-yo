@@ -1,0 +1,10 @@
+<script src="../yo-yo.js"></script>
+<script>
+window.customElements.define('hello-label-v1', class extends HTMLElement {
+  connectedCallback() {
+    yo.update(this, yo`<hello-label-v1>
+      <div>Hello ${this.getAttribute('label')}</div>
+    </hello-label-v1>`)
+  }
+})
+</script>

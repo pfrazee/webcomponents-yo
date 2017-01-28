@@ -1,0 +1,28 @@
+<script src="../yo-yo.js"></script>
+<script src="../base-classes.js"></script>
+<script>
+window.customElements.define('seconds-elapsed-v1', class extends FirstBase {
+  constructor() {
+    super()
+    this.tick = 0
+    this.interval = null
+  }
+
+  connectedCallback() {
+    this.render()
+    
+    this.interval = setInterval(() => {
+      this.tick++
+      this.render()
+    }, 1000)
+  }
+
+  disconnectedCallback() {
+    clearInterval(this.interval)
+  }
+
+  render() {
+    yo.update(this.baseEl, yo`<div>Seconds Elapsed: ${this.tick}</div>`)
+  }
+})
+</script>

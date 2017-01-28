@@ -1,0 +1,25 @@
+{
+  "name": "webcomponents-yo",
+  "version": "1.0.0",
+  "description": "Replace React with Native Web Components and Yo-Yo!",
+  "main": "index.js",
+  "dependencies": {
+    "remarkable": "^1.7.1",
+    "yo-yo": "^1.4.0"
+  },
+  "devDependencies": {
+    "browserify": "^14.0.0"
+  },
+  "scripts": {
+    "build": "browserify yo-yo.export.js > ./yo-yo.js; browserify remarkable.export.js > ./remarkable.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "web",
+    "webcomponents",
+    "yo",
+    "yoyo"
+  ],
+  "author": "Paul Frazee <pfrazee@gmail.com>",
+  "license": "MIT"
+}

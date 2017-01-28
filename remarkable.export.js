@@ -1,0 +1,1 @@
+window.Remarkable = require('remarkable')

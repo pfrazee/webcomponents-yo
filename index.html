@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+  <head>
+    <title>WebComponents, Yo!</title>
+    <link rel="import" href="./com/hello-label-v1.html">
+    <link rel="import" href="./com/hello-label-v2.html">
+    <link rel="import" href="./com/hello-label-v3.html">
+    <link rel="import" href="./com/seconds-elapsed-v1.html">
+    <link rel="import" href="./com/seconds-elapsed-v2.html">
+    <link rel="import" href="./com/seconds-elapsed-v3.html">
+    <link rel="import" href="./com/todo-app-v1.html">
+    <link rel="import" href="./com/markdown-editor-v1.html">
+  </head>
+  <body>
+    <h1>WebComponents, Yo! (WCYO)</h1>
+    <p>This page contains my first attempts to use <a href="https://npm.im/yo-yo">Yo-Yo</a> with Web Components. My goal is to create something that's as easy-to-use as React, but that's much more minimal and native.</p>
+    <p><a href="https://github.com/pfrazee/webcomponents-yo">page repo</a></p>
+    <hr>
+    <h2><code>hello-label</code></h2>
+    <p>This was my first incursion into WCYO. By the end, I created the <code>FirstBase</code> helper class and the definition looked like this:</p>
+    <pre>
+window.customElements.define('hello-label-v3', class extends FirstBase {
+  connectedCallback() {
+    yo.update(this.baseEl, yo`&lt;div&gt;Hello ${this.getAttribute('label')}&lt;/div&gt;`)
+  }
+})
+    </pre>
+    <section>
+      <hello-label-v1 label="Jane"></hello-label-v1>
+      <hello-label-v2 label="Bob"></hello-label-v2>
+      <hello-label-v3 label="Alice"></hello-label-v3>
+    </section>
+    <br>
+    <hr>
+    <h2><code>seconds-elapsed</code></h2>
+    <p>With this one, it was time to create "reactive" attributes. Turns out, a <code>Proxy</code> is great for this (at least from the usability standpoint). This led to the <code>SecondBase</code> helper class and the definition looked like this:</p>
+    <pre>
+window.customElements.define('seconds-elapsed-v3', class extends SecondBase {
+  constructor() {
+    super()
+    this.interval = null
+  }
+
+  static get observedAttributes() {
+    return ['tick']
+  }
+
+  connectedCallback() {
+    this.state.tick = 0
+    this.interval = setInterval(() => {
+      this.state.tick++
+    }, 1000)
+  }
+
+  disconnectedCallback() {
+    clearInterval(this.interval)
+  }
+
+  render() {
+    return yo`&lt;div&gt;Seconds Elapsed: ${this.state.tick}&lt;/div&gt;`
+  }
+})
+</pre>
+    <section>
+      <seconds-elapsed-v1></seconds-elapsed-v1>
+      <seconds-elapsed-v2></seconds-elapsed-v2>
+      <seconds-elapsed-v3></seconds-elapsed-v3>
+    </section>
+    <br>
+    <hr>
+    <h2><code>todo-app</code></h2>
+    <p>The todo app didn't take much more work, but it did reveal an issue with passing Objects via markup. This led to the <code>ThirdBase</code> helper class which used JSON serialization for attrs, and the definition looked like this:</p>
+    <pre>
+window.customElements.define('todo-app-v1', class extends ThirdBase {
+  constructor() {
+    super()
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.state.items = []
+    this.state.text = ''
+  }
+
+  static get observedAttributes() {
+    return ['items', 'text']
+  }
+
+  render() {
+    return yo`
+      &lt;div&gt;
+        &lt;h3&gt;TODO&lt;/h3&gt;
+        &lt;todo-list-v1 items=${this.getAttribute('items')}&gt;&lt;/todo-list-v1&gt;
+        &lt;form onsubmit=${this.handleSubmit}&gt;
+          &lt;input onchange=${this.handleChange} value=${this.state.text} /&gt;
+          &lt;button&gt;${'Add #' + (this.state.items.length + 1)}&lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    `
+  }
+
+  handleChange(e) {
+    this.state.text = e.target.value
+  }
+
+  handleSubmit(e) {
+    e.preventDefault()
+    var newItem = {
+      text: this.state.text,
+      id: Date.now()
+    }
+    this.state.items = this.state.items.concat([newItem])
+    this.state.text = ''
+  }
+})
+
+window.customElements.define('todo-list-v1', class extends ThirdBase {
+  constructor() {
+    super()
+  }
+
+  static get observedAttributes() {
+    return ['items']
+  }
+
+  render() {
+    const items = this.state.items || []
+    return yo`
+      &lt;ul&gt;
+        ${items.map(item =&gt; yo`
+          &lt;li key=${item.id}&gt;${item.text}&lt;/li&gt;
+        `)}
+      &lt;/ul&gt;
+    `
+  }
+})
+</pre>
+    <section>
+      <todo-app-v1></todo-app-v1>
+    </section>
+    <hr>
+    <h2><code>markdown-editor</code></h2>
+    <p>Pretty easy after the others; we just had to use innerHTML to render the markdown.</p>
+    <pre>
+window.customElements.define('markdown-editor-v1', class extends ThirdBase {
+  constructor() {
+    super()
+    this.handleChange = this.handleChange.bind(this);
+    this.state.value = 'Type some *markdown* here!'
+  }
+
+  static get observedAttributes() {
+    return ['value']
+  }
+
+  handleChange(e) {
+    this.state.value = e.target.value
+  }
+
+  getRawMarkup() {
+    var md = new Remarkable()
+    return md.render(this.state.value)
+  }
+
+  render() {
+    var el = yo`
+      &lt;div class="markdown-editor"&gt;
+        &lt;h3&gt;Input&lt;/h3&gt;
+        &lt;textarea onchange=${this.handleChange}&gt;${this.state.value}&lt;/textarea&gt;
+        &lt;h3&gt;Output&lt;/h3&gt;
+        &lt;div class="content"&gt;&lt;/textarea&gt;
+      &lt;/div&gt;
+    `
+    el.querySelector('.content').innerHTML = this.getRawMarkup()
+    return el
+  }
+
+})
+    </pre>
+    <markdown-editor-v1></markdown-editor-v1>
+  </body>
+</html>

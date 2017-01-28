@@ -1,0 +1,65 @@
+<script src="../yo-yo.js"></script>
+<script src="../base-classes.js"></script>
+<script>
+window.customElements.define('todo-app-v1', class extends ThirdBase {
+  constructor() {
+    super()
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.state.items = []
+    this.state.text = ''
+  }
+
+  static get observedAttributes() {
+    return ['items', 'text']
+  }
+
+  render() {
+    return yo`
+      <div>
+        <h3>TODO</h3>
+        <todo-list-v1 items=${this.getAttribute('items')}></todo-list-v1>
+        <form onsubmit=${this.handleSubmit}>
+          <input onchange=${this.handleChange} value=${this.state.text} />
+          <button>${'Add #' + (this.state.items.length + 1)}</button>
+        </form>
+      </div>
+    `
+  }
+
+  handleChange(e) {
+    this.state.text = e.target.value
+  }
+
+  handleSubmit(e) {
+    e.preventDefault()
+    var newItem = {
+      text: this.state.text,
+      id: Date.now()
+    }
+    this.state.items = this.state.items.concat([newItem])
+    this.state.text = ''
+  }
+})
+
+window.customElements.define('todo-list-v1', class extends ThirdBase {
+  constructor() {
+    super()
+  }
+
+  static get observedAttributes() {
+    return ['items']
+  }
+
+  render() {
+    const items = this.state.items || []
+    return yo`
+      <ul>
+        ${items.map(item => yo`
+          <li key=${item.id}>${item.text}</li>
+        `)}
+      </ul>
+    `
+  }
+})
+</script>

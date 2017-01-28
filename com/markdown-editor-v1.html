@@ -1,0 +1,40 @@
+<script src="../yo-yo.js"></script>
+<script src="../remarkable.js"></script>
+<script src="../base-classes.js"></script>
+<script>
+window.customElements.define('markdown-editor-v1', class extends ThirdBase {
+  constructor() {
+    super()
+    this.handleChange = this.handleChange.bind(this);
+    this.state.value = 'Type some *markdown* here!'
+  }
+
+  static get observedAttributes() {
+    return ['value']
+  }
+
+  handleChange(e) {
+    this.state.value = e.target.value
+  }
+
+  getRawMarkup() {
+    var md = new Remarkable()
+    return md.render(this.state.value)
+  }
+
+  render() {
+    var el = yo`
+      <div class="markdown-editor">
+        <h3>Input</h3>
+        <textarea onchange=${this.handleChange}>${this.state.value}</textarea>
+        <h3>Output</h3>
+        <div class="content"></textarea>
+      </div>
+    `
+    el.querySelector('.content').innerHTML = this.getRawMarkup()
+    return el
+  }
+
+})
+
+</script>

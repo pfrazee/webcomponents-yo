@@ -1,0 +1,9 @@
+<script src="../yo-yo.js"></script>
+<script src="../base-classes.js"></script>
+<script>
+window.customElements.define('hello-label-v3', class extends FirstBase {
+  connectedCallback() {
+    yo.update(this.baseEl, yo`<div>Hello ${this.getAttribute('label')}</div>`)
+  }
+})
+</script>
