@@ -1,7 +1,7 @@
 <script src="../yo-yo.js"></script>
-<script src="../base-classes.js"></script>
+<script src="../base-class.js"></script>
 <script>
-window.customElements.define('todo-app-v1', class extends ThirdBase {
+window.customElements.define('todo-app', class extends HTMLYoYo {
   constructor() {
     super()
     this.handleChange = this.handleChange.bind(this)
@@ -18,7 +18,7 @@ window.customElements.define('todo-app-v1', class extends ThirdBase {
     return yo`
       <div>
         <h3>TODO</h3>
-        <todo-list-v1 items=${this.getAttribute('items')}></todo-list-v1>
+        <todo-list items=${this.getAttribute('items')}></todo-list>
         <form onsubmit=${this.handleSubmit}>
           <input onchange=${this.handleChange} value=${this.state.text} />
           <button>${'Add #' + (this.state.items.length + 1)}</button>
@@ -42,7 +42,7 @@ window.customElements.define('todo-app-v1', class extends ThirdBase {
   }
 })
 
-window.customElements.define('todo-list-v1', class extends ThirdBase {
+window.customElements.define('todo-list', class extends HTMLYoYo {
   constructor() {
     super()
   }

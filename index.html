@@ -2,14 +2,10 @@
 <html>
   <head>
     <title>WebComponents, Yo!</title>
-    <link rel="import" href="./com/hello-label-v1.html">
-    <link rel="import" href="./com/hello-label-v2.html">
-    <link rel="import" href="./com/hello-label-v3.html">
-    <link rel="import" href="./com/seconds-elapsed-v1.html">
-    <link rel="import" href="./com/seconds-elapsed-v2.html">
-    <link rel="import" href="./com/seconds-elapsed-v3.html">
-    <link rel="import" href="./com/todo-app-v1.html">
-    <link rel="import" href="./com/markdown-editor-v1.html">
+    <link rel="import" href="./com/hello-label.html">
+    <link rel="import" href="./com/seconds-elapsed.html">
+    <link rel="import" href="./com/todo-app.html">
+    <link rel="import" href="./com/markdown-editor.html">
   </head>
   <body>
     <h1>WebComponents, Yo! (WCYO)</h1>
@@ -19,28 +15,21 @@
     <h2><code>hello-label</code></h2>
     <p>This was my first incursion into WCYO. By the end, I created the <code>FirstBase</code> helper class and the definition looked like this:</p>
     <pre>
-window.customElements.define('hello-label-v3', class extends FirstBase {
-  connectedCallback() {
-    yo.update(this.baseEl, yo`&lt;div&gt;Hello ${this.getAttribute('label')}&lt;/div&gt;`)
+window.customElements.define('hello-label', class extends HTMLYoYo {
+  render() {
+    return yo`&lt;div&gt;Hello ${this.getAttribute('label')}&lt;/div&gt;`
   }
 })
     </pre>
     <section>
-      <hello-label-v1 label="Jane"></hello-label-v1>
-      <hello-label-v2 label="Bob"></hello-label-v2>
-      <hello-label-v3 label="Alice"></hello-label-v3>
+      <hello-label label="Jane"></hello-label>
     </section>
     <br>
     <hr>
     <h2><code>seconds-elapsed</code></h2>
     <p>With this one, it was time to create "reactive" attributes. Turns out, a <code>Proxy</code> is great for this (at least from the usability standpoint). This led to the <code>SecondBase</code> helper class and the definition looked like this:</p>
     <pre>
-window.customElements.define('seconds-elapsed-v3', class extends SecondBase {
-  constructor() {
-    super()
-    this.interval = null
-  }
-
+window.customElements.define('seconds-elapsed', class extends HTMLYoYo {
   static get observedAttributes() {
     return ['tick']
   }
@@ -57,21 +46,19 @@ window.customElements.define('seconds-elapsed-v3', class extends SecondBase {
   }
 
   render() {
-    return yo`&lt;div&gt;Seconds Elapsed: ${this.state.tick}&lt;/div&gt;`
+    return yo`&lt;div&gt;Seconds Elapsed: ${this.getAttribute('tick')}&lt;/div&gt;`
   }
 })
 </pre>
     <section>
-      <seconds-elapsed-v1></seconds-elapsed-v1>
-      <seconds-elapsed-v2></seconds-elapsed-v2>
-      <seconds-elapsed-v3></seconds-elapsed-v3>
+      <seconds-elapsed></seconds-elapsed>
     </section>
     <br>
     <hr>
     <h2><code>todo-app</code></h2>
     <p>The todo app didn't take much more work, but it did reveal an issue with passing Objects via markup. This led to the <code>ThirdBase</code> helper class which used JSON serialization for attrs, and the definition looked like this:</p>
     <pre>
-window.customElements.define('todo-app-v1', class extends ThirdBase {
+window.customElements.define('todo-app', class extends HTMLYoYo {
   constructor() {
     super()
     this.handleChange = this.handleChange.bind(this)
@@ -88,7 +75,7 @@ window.customElements.define('todo-app-v1', class extends ThirdBase {
     return yo`
       &lt;div&gt;
         &lt;h3&gt;TODO&lt;/h3&gt;
-        &lt;todo-list-v1 items=${this.getAttribute('items')}&gt;&lt;/todo-list-v1&gt;
+        &lt;todo-list items=${this.getAttribute('items')}&gt;&lt;/todo-list&gt;
         &lt;form onsubmit=${this.handleSubmit}&gt;
           &lt;input onchange=${this.handleChange} value=${this.state.text} /&gt;
           &lt;button&gt;${'Add #' + (this.state.items.length + 1)}&lt;/button&gt;
@@ -112,7 +99,7 @@ window.customElements.define('todo-app-v1', class extends ThirdBase {
   }
 })
 
-window.customElements.define('todo-list-v1', class extends ThirdBase {
+window.customElements.define('todo-list', class extends ThirdBase {
   constructor() {
     super()
   }
@@ -134,13 +121,13 @@ window.customElements.define('todo-list-v1', class extends ThirdBase {
 })
 </pre>
     <section>
-      <todo-app-v1></todo-app-v1>
+      <todo-app></todo-app>
     </section>
     <hr>
     <h2><code>markdown-editor</code></h2>
     <p>Pretty easy after the others; we just had to use innerHTML to render the markdown.</p>
     <pre>
-window.customElements.define('markdown-editor-v1', class extends ThirdBase {
+window.customElements.define('markdown-editor', class extends HTMLYoYo {
   constructor() {
     super()
     this.handleChange = this.handleChange.bind(this);
@@ -172,9 +159,8 @@ window.customElements.define('markdown-editor-v1', class extends ThirdBase {
     el.querySelector('.content').innerHTML = this.getRawMarkup()
     return el
   }
-
 })
     </pre>
-    <markdown-editor-v1></markdown-editor-v1>
+    <markdown-editor></markdown-editor>
   </body>
 </html>

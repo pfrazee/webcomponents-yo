@@ -1,0 +1,9 @@
+<script src="../yo-yo.js"></script>
+<script src="../base-class.js"></script>
+<script>
+window.customElements.define('hello-label', class extends HTMLYoYo {
+  render() {
+    return yo`<div>Hello ${this.getAttribute('label')}</div>`
+  }
+})
+</script>

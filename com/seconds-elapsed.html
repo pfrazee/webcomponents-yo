@@ -1,12 +1,7 @@
 <script src="../yo-yo.js"></script>
-<script src="../base-classes.js"></script>
+<script src="../base-class.js"></script>
 <script>
-window.customElements.define('seconds-elapsed-v3', class extends SecondBase {
-  constructor() {
-    super()
-    this.interval = null
-  }
-
+window.customElements.define('seconds-elapsed', class extends HTMLYoYo {
   static get observedAttributes() {
     return ['tick']
   }
@@ -23,7 +18,7 @@ window.customElements.define('seconds-elapsed-v3', class extends SecondBase {
   }
 
   render() {
-    return yo`<div>Seconds Elapsed: ${this.state.tick}</div>`
+    return yo`<div>Seconds Elapsed: ${this.getAttribute('tick')}</div>`
   }
 })
 </script>
