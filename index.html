@@ -13,7 +13,6 @@
     <p><a href="https://github.com/pfrazee/webcomponents-yo">page repo</a></p>
     <hr>
     <h2><code>hello-label</code></h2>
-    <p>This was my first incursion into WCYO. By the end, I created the <code>FirstBase</code> helper class and the definition looked like this:</p>
     <pre>
 window.customElements.define('hello-label', class extends HTMLYoYo {
   render() {
@@ -27,7 +26,6 @@ window.customElements.define('hello-label', class extends HTMLYoYo {
     <br>
     <hr>
     <h2><code>seconds-elapsed</code></h2>
-    <p>With this one, it was time to create "reactive" attributes. Turns out, a <code>Proxy</code> is great for this (at least from the usability standpoint). This led to the <code>SecondBase</code> helper class and the definition looked like this:</p>
     <pre>
 window.customElements.define('seconds-elapsed', class extends HTMLYoYo {
   static get observedAttributes() {
@@ -56,7 +54,6 @@ window.customElements.define('seconds-elapsed', class extends HTMLYoYo {
     <br>
     <hr>
     <h2><code>todo-app</code></h2>
-    <p>The todo app didn't take much more work, but it did reveal an issue with passing Objects via markup. This led to the <code>ThirdBase</code> helper class which used JSON serialization for attrs, and the definition looked like this:</p>
     <pre>
 window.customElements.define('todo-app', class extends HTMLYoYo {
   constructor() {
@@ -125,7 +122,6 @@ window.customElements.define('todo-list', class extends ThirdBase {
     </section>
     <hr>
     <h2><code>markdown-editor</code></h2>
-    <p>Pretty easy after the others; we just had to use innerHTML to render the markdown.</p>
     <pre>
 window.customElements.define('markdown-editor', class extends HTMLYoYo {
   constructor() {
